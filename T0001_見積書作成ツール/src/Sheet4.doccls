@@ -1,0 +1,40 @@
+﻿Option Explicit
+
+'******************************************************************************************
+'*関数名    ：Worksheet_Changeイベント処理
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Worksheet_Change(ByVal Target As Range)
+    
+    '定数
+    Const FUNC_NAME As String = "Worksheet_Change"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    '---以下に処理を記述---
+    
+    '処理スキップ判別
+    If EVT_DISABLE_FLG Then Exit Sub
+    
+    'イベント処理実行
+    If Not Worksheet_Change_Manager(Target) Then GoTo ExitHandler
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生しましたのでマクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+

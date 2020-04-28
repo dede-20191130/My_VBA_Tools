@@ -1,0 +1,87 @@
+﻿Option Explicit
+
+
+
+
+'******************************************************************************************
+'*関数名    ：Workbook_Open
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Workbook_Open()
+    
+    '定数
+    Const FUNC_NAME As String = "Workbook_Open"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    '---以下に処理を記述---
+    
+    '処理スキップ判別
+    If EVT_DISABLE_FLG Then Exit Sub
+    
+    'シートオブジェクト設定
+    Set ws_estimate_data = ThisWorkbook.Worksheets(SHEET_NAME_ESTIMATE_DATA)
+    Set ws_estimate_product_set_data = ThisWorkbook.Worksheets(SHEET_NAME_ESTIMATE_PRODUCT_SET_DATA)
+    Set ws_product_data = ThisWorkbook.Worksheets(SHEET_NAME_PRODUCT_DATA)
+    Set ws_basic_data = ThisWorkbook.Worksheets(SHEET_NAME_BASIC_DATA)
+    Set ws_template = ThisWorkbook.Worksheets(SHEET_NAME_TEMPLATE)
+    
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+        MsgBox "エラーが発生しましたのでマクロを終了します。" & _
+                vbLf & _
+                "関数名：" & FUNC_NAME & _
+                vbLf & _
+                "エラー番号" & Err.Number & Chr(13) & Err.Description, vbCritical, TOOL_NAME
+        
+        GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：Workbook_BeforeClose
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+    
+    '定数
+    Const FUNC_NAME As String = "XXX"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    '---以下に処理を記述---
+    
+    '開発用ツールの確認
+    If EVT_DISABLE_FLG Then Call MsgBox("※開発用定数が有効化されています。")
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生しましたのでマクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub

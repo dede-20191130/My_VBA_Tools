@@ -1,0 +1,41 @@
+﻿Option Explicit
+
+'※　CommandButton_C_E_D:CommandButton_Create_Estimate_Docs
+'******************************************************************************************
+'*関数名    ：
+'*機能      ：ボタンクリック時実行
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub CommandButton_C_E_D_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "CommandButton_Create_Estimation_Docs_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    '---以下に処理を記述---
+    
+    F_Create_Estimation_Docs.Show vbModal
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+    
+    If Err.Number = 513 Then
+        MsgBox Err.Description, vbExclamation, TOOL_NAME
+        GoTo ExitHandler
+    End If
+    
+    MsgBox "エラーが発生しましたのでマクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号" & Err.Number & Chr(13) & Err.Description, vbCritical, TOOL_NAME
+           
+    GoTo ExitHandler
+        
+End Sub
+
