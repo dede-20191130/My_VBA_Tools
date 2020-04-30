@@ -56,4 +56,4 @@
 
 その他、何がありましたらこちらまでメールをお願いします。
 
-[1044adad@gmail.com](1044adad@gmail.com)
+[1044adad@gmail.com](mailto:1044adad@gmail.com)
