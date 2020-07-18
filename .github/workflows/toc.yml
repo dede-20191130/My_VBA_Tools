@@ -1,7 +1,5 @@
 on: 
-  push:
-    paths: 
-      - '**.md'
+  pull_request
 name: TOC Generator
 jobs:
   generateTOC:
@@ -9,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: technote-space/toc-generator@v2
-env:
-  TARGET_PATHS: /**readme*.md,/**Readme*.md,/**README*.md
-  TOC_TITLE: 目次
+        with:
+          TARGET_PATHS: '**/Readme*.md,**/readme*.md,**/README*.md'
+          TOC_TITLE: 目次
+
   
