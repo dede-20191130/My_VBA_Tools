@@ -1,0 +1,183 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*エクスポートForm
+'**************************
+
+'定数
+
+'変数
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '初期化
+    Me.txt_filePath.Value = ""
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：btn_ref_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_ref_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_ref_Click"
+    
+    '変数
+    Dim dicFilter As Object
+    Dim filePath As String
+    
+    On Error GoTo ErrorHandler
+    
+    '選択ダイアログ表示
+    Set dicFilter = CreateObject("scripting.dictionary")
+    dicFilter.Add "すべてのAccessファイル", "*.accdb;*.mdb"
+    dicFilter.Add "Accessファイル（~2003）", "*.mdb"
+    dicFilter.Add "Accessファイル（2007~）", "*.accdb"
+    filePath = getFilePathFromDialog("エクスポート対象Accessファイル", dicFilter)
+    If filePath = "" Then GoTo ExitHandler
+    
+    'テキストボックスに記入
+    Me.txt_filePath.Value = filePath
+
+ExitHandler:
+
+    Set dicFilter = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：btn_export_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_export_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_export_Click"
+    
+    '変数
+    Dim isFileNotExist  As Boolean
+    
+    On Error GoTo ErrorHandler
+
+    '処理続行の確認
+    If MsgBox("指定Accessファイルのテーブル定義をエクスポートします。", vbYesNo, Tool_Name) <> vbYes Then GoTo ExitHandler
+
+    'ファイルの存在チェック
+    isFileNotExist = (Nz(Me.txt_filePath, "") = "") Or (Dir(Nz(Me.txt_filePath, "")) = "")
+    If isFileNotExist Then MsgBox "ファイルが存在しません。", vbExclamation, Tool_Name: GoTo ExitHandler
+    
+    'エクスポート
+    If Not exportTableDefTablesMain(Me.txt_filePath) Then GoTo ExitHandler
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_terminate_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_terminate_Click()
+
+    
+    '定数
+    Const FUNC_NAME As String = "btn_terminate_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    'ツールの終了確認
+    If MsgBox("ツールを終了します。", vbYesNo, Tool_Name) <> vbYes Then GoTo ExitHandler
+    
+    #If CBool(DEBUG_MODE) Then
+        DoCmd.Close acForm, Me.Name, acSaveNo
+    #Else
+        Application.Quit
+    #End If
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
