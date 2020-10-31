@@ -1,0 +1,45 @@
+﻿Option Explicit
+
+
+'******************************************************************************************
+'*関数名    ：Workbook_Open
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Workbook_Open()
+    
+    '定数
+    Const FUNC_NAME As String = "Workbook_Open"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    #If Not CBool(DEBUG_MODE) Then
+        'ブックを非表示
+        Windows(ThisWorkbook.Name).Visible = False
+        '最前面に表示
+        AppActivate Application.Caption
+    #End If
+    
+    'フォームを表示
+    F_Main.Show vbModeless
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
