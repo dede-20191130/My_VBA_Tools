@@ -1,0 +1,36 @@
+﻿Option Explicit
+
+
+'******************************************************************************************
+'*関数名    ：btn_showForm_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_showForm_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_showForm_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    'F_Mainを表示する
+    F_Main.Show vbModeless
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
