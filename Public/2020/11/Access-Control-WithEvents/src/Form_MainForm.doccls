@@ -1,0 +1,245 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*MainForm
+'**************************
+
+'定数
+
+
+'変数
+Private objCmbListener As clsCmbListener
+
+
+
+'******************************************************************************************
+'*getter/setter
+'******************************************************************************************
+
+
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    Dim dicInfo As Object
+    
+    On Error GoTo ErrorHandler
+
+    'イベントクラス設定
+    Set objCmbListener = New clsCmbListener: Set objCmbListener.ComboBox = Me.cmb_withEventsTest
+    'イベントログ設定
+    Set M_EventLog.targetTxtBox = Me.txt_EventLog
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：cmb_withEventsTest_BeforeUpdate
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub cmb_withEventsTest_BeforeUpdate(Cancel As Integer)
+    
+    '定数
+    Const FUNC_NAME As String = "cmb_withEventsTest_BeforeUpdate"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    'ログ
+    If Not M_EventLog.writeEventLogs(FUNC_NAME) Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：cmb_selectedRcd_AfterUpdate
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub cmb_withEventsTest_AfterUpdate()
+    
+    '定数
+    Const FUNC_NAME As String = "cmb_selectedRcd_AfterUpdate"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    'ログ
+    If Not M_EventLog.writeEventLogs(FUNC_NAME) Then GoTo ExitHandler
+    If Not M_EventLog.writeEventLogs("""" & Me.cmb_withEventsTest.Value & """" & "Selected") Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'Private Sub cmb_selectedRcd_KeyDown(KeyCode As Integer, Shift As Integer)
+''
+'End Sub
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：txt_EventLog_GotFocus
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub txt_EventLog_GotFocus()
+    
+    '定数
+    Const FUNC_NAME As String = "txt_EventLog_GotFocus"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    With Me.txt_EventLog
+        .SelStart = Len(.Value)
+    End With
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_logClear_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_logClear_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_logClear_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    'テキストボックスをクリア
+    Me.txt_EventLog.Value = ""
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_exit_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_exit_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_exit_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
