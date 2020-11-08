@@ -32,7 +32,7 @@ Public Function writeEventLogs(ByVal logTxt As String) As Boolean
 
     writeEventLogs = False
     
-    If targetTxtBox.Value <> "" Then targetTxtBox.Value = targetTxtBox.Value & vbNewLine
+    If Nz(targetTxtBox.Value, "") <> "" Then targetTxtBox.Value = targetTxtBox.Value & vbNewLine
     targetTxtBox.Value = targetTxtBox.Value & _
                          Now & _
                          " : " & _

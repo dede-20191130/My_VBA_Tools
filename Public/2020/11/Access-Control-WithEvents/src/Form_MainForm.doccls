@@ -152,6 +152,7 @@ Private Sub txt_EventLog_GotFocus()
     On Error GoTo ErrorHandler
     
     With Me.txt_EventLog
+        If IsNull(.Value) Then GoTo ExitHandler
         .SelStart = Len(.Value)
     End With
 
