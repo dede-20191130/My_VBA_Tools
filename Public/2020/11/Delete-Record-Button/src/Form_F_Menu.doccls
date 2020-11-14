@@ -1,0 +1,91 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*メニューForm
+'**************************
+
+'定数
+
+'変数
+
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_MainScreen_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_MainScreen_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_MainScreen_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '自画面を閉じる
+    DoCmd.Close acForm, Me.Name, acSaveNo
+
+    'メイン画面を開く
+    DoCmd.OpenForm "F_Main"
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_terminate_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_terminate_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_terminate_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '自画面を閉じる
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub

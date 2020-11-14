@@ -1,0 +1,158 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*MainForm
+'**************************
+
+'定数
+
+'変数
+
+
+
+'******************************************************************************************
+'*getter/setter
+'******************************************************************************************
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_InsertDummy_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_InsertDummy_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_InsertDummy_Click"
+    
+    '変数
+    Dim rndStr As String
+    Dim rs As DAO.Recordset
+    
+    On Error GoTo ErrorHandler
+    
+    'ランダム文字列取得
+    rndStr = createDummyString
+    If rndStr = "" Then GoTo ExitHandler
+    
+    '挿入
+    Set rs = CurrentDb.OpenRecordset("T_Main")
+    With rs
+        .AddNew
+        
+        .Fields("ランダム文字列").Value = rndStr
+        
+        .Update
+    End With
+    
+    Me.Recalc
+    
+ExitHandler:
+    
+    If Not rs Is Nothing Then rs.Clone: Set rs = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：btn_Delete_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_Delete_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_Delete_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    
+    '削除
+    With Me.subForm.Form.Recordset
+        .Bookmark = Me!subForm.Form.Bookmark
+        .Delete
+
+    End With
+
+    Me.Recalc
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    If Err.Number = 3021 Then Err.Clear: GoTo ExitHandler
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_back_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_back_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_back_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    
+    '自画面閉じる
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+    'メニュー画面開く
+    DoCmd.OpenForm "F_Menu"
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
