@@ -1,0 +1,297 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*メインForm
+'**************************
+
+'定数
+
+'変数
+
+
+'******************************************************************************************
+'*getter/setter
+'******************************************************************************************
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    'set database
+    Set M_Export.db = CurrentDb
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：btn_execute_num_1_Click
+'*機能      ：新規Excelブック作成
+'*　　　　　　商品テーブルから単価が１００００を超える商品のデータを抽出
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_execute_num_1_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_execute_num_1_Click"
+    
+    '変数
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    
+    On Error GoTo ErrorHandler
+    
+    'Excelブック作成クラス設定
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    '商品データテーブルのヘッダー取得
+    If Not getTableHeader("M_商品データ", arrHeader) Then GoTo ExitHandler
+    
+    '商品データテーブルの
+    '単価が10000を超える商品のデータ(i)取得
+    If Not getTableDataBySQL("SELECT * FROM M_商品データ WHERE 単価 > 10000;", arrData) Then GoTo ExitHandler
+    
+    'データ(i)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "単価1万超えデータ", arrHeader, arrData) Then GoTo ExitHandler
+    
+    Call MsgBox("実行_(1)+(2)完了" & vbNewLine & "デスクトップにExcelブックが作成されました。", , TOOL_NAME)
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_execute_num_2_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_execute_num_2_Click()
+    
+    ''定数
+    Const FUNC_NAME As String = "btn_execute_num_2_Click"
+    
+    '変数
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    
+    On Error GoTo ErrorHandler
+    
+    'Excelブック作成クラス設定
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    '◆一枚目のシート
+    '商品データテーブルのヘッダー取得
+    If Not getTableHeader("M_商品データ", arrHeader) Then GoTo ExitHandler
+    
+    '商品データテーブルの
+    '単価が10000を超える商品のデータ(i)取得
+    If Not getTableDataBySQL("SELECT * FROM M_商品データ WHERE 単価 > 10000;", arrData) Then GoTo ExitHandler
+    
+    'データ(i)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "単価1万超えデータ", arrHeader, arrData) Then GoTo ExitHandler
+    
+    '◆二枚目のシート
+    objCreateNewExcel.addNewSheet
+    
+    '商品データテーブルの
+    '商品コードがBから始まる商品のデータ(ii)取得
+    If Not getTableDataBySQL("SELECT * FROM M_商品データ WHERE Left(商品コード,1) = 'B';", arrData) Then GoTo ExitHandler
+    
+    'データ(ii)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(2), "商品コードがBから始まるデータ", arrHeader, arrData) Then GoTo ExitHandler
+    
+    Call MsgBox("実行_(1)+(2)+(3)完了" & vbNewLine & "デスクトップにExcelブックが作成されました。", , TOOL_NAME)
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_execute_num_3_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_execute_num_3_Click()
+    
+    ''定数
+    Const FUNC_NAME As String = "btn_execute_num_3_Click"
+    
+    '変数
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    Dim dicJson As Dictionary
+    Dim arrJson() As Variant
+    Dim i As Long
+    
+    On Error GoTo ErrorHandler
+    
+    'Excelブック作成クラス設定
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    '◆一枚目のシート
+    '商品データテーブルのヘッダー取得
+    If Not getTableHeader("M_商品データ", arrHeader) Then GoTo ExitHandler
+    
+    '商品データテーブルの
+    '単価が10000を超える商品のデータ(i)取得
+    If Not getTableDataBySQL("SELECT * FROM M_商品データ WHERE 単価 > 10000;", arrData) Then GoTo ExitHandler
+    
+    'データ(i)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "単価1万超えデータ", arrHeader, arrData) Then GoTo ExitHandler
+    
+    '◆二枚目のシート
+    objCreateNewExcel.addNewSheet
+    
+    '商品データテーブルの
+    '商品コードがBから始まる商品のデータ(ii)取得
+    If Not getTableDataBySQL("SELECT * FROM M_商品データ WHERE Left(商品コード,1) = 'B';", arrData) Then GoTo ExitHandler
+    
+    'データ(ii)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(2), "商品コードがBから始まるデータ", arrHeader, arrData) Then GoTo ExitHandler
+    
+    '◆三枚目のシート
+    objCreateNewExcel.addNewSheet
+    
+    'WebAPIからJSON文字列取得し、Dictionaryにパースする
+    Set dicJson = JsonConverter.ParseJson( _
+        getJsonFromAPI(WEBAPI_URL) _
+    )
+    
+    'JSONデータ(iii)を二次元配列に格納
+    ReDim arrJson(0 To dicJson.Count - 1, 0 To 2)
+    For i = LBound(dicJson.Keys) To UBound(dicJson.Keys)
+        arrJson(i, 0) = dicJson.Keys(i)
+        arrJson(i, 1) = dicJson.Item(arrJson(i, 0)).Item("name")
+        arrJson(i, 2) = dicJson.Item(arrJson(i, 0)).Item("price")
+    Next
+    
+    'データ(iii)をブックのシートに転記
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(3), "WebAPIから取得したデータ", Array("商品コード", "商品名", "価格"), arrJson) Then GoTo ExitHandler
+    
+    Call MsgBox("実行_(1)+(2)+(3)+(4)完了" & vbNewLine & "デスクトップにExcelブックが作成されました。", , TOOL_NAME)
+    
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_back_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_back_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_back_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '画面閉じる
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
