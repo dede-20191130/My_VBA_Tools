@@ -57,7 +57,7 @@ Public Sub TestTemplateA()
         '小計から合計を計算 異常終了時はExitHandler（終了処理）に移行
         If Not objTableCreater.calcTotalFromSubTotal Then GoTo ExitHandler
         
-        '行幅・列幅の調整
+        '列幅の調整
         ws.Range(ws.Cells(2, 2), ws.Cells(9, 4)).EntireColumn.AutoFit
         
     End With
@@ -129,7 +129,7 @@ Public Sub TestTemplateB()
         '小計から合計を計算 異常終了時はExitHandler（終了処理）に移行
         If Not objTableCreater.calcTotalFromSubTotal Then GoTo ExitHandler
         
-        '行幅・列幅の調整
+        '列幅の調整
         ws.Range(ws.Cells(2, 2), ws.Cells(8, 10)).EntireColumn.AutoFit
         
     End With
