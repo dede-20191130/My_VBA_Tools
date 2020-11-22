@@ -21,7 +21,7 @@ Private currentSheetNum As Long
 '変数
 Private myXlApp As Object
 Private myWorkBook As Object
-Private dicWorkSheet As Dictionary
+Private dicWorkSheet As Dictionary 'ブックの全てのワークシートが格納されているDictionaryオブジェクト
 
 
 '******************************************************************************************

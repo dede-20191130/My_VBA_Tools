@@ -91,7 +91,7 @@ Public Function getTableDataBySQL(ByVal sql As String, ByRef arrData() As Varian
     
     Set rs = db.OpenRecordset(sql)
     With rs
-        If .EOF Then GoTo ExitHandler
+        If .EOF Then GoTo TruePoint
         .MoveLast
         ReDim arrData(0 To .RecordCount - 1, 0 To .Fields.Count - 1)
         .MoveFirst
@@ -105,6 +105,8 @@ Public Function getTableDataBySQL(ByVal sql As String, ByRef arrData() As Varian
             .MoveNext
         Loop
     End With
+
+TruePoint:
 
     getTableDataBySQL = True
     
