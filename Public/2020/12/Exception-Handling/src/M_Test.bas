@@ -25,25 +25,28 @@ Public Sub subSample()
     '変数
     Dim filePathArr As Variant
     Dim filePath As Variant
+    Dim sheetName As String
     
     On Error GoTo ErrorHandler
     
     Application.ScreenUpdating = False
     
     'funcSample01の呼び出し　存在しないシート名の引数で呼び出す
-    filePathArr = funcSample01("sheetNotExist")
+    sheetName = "sheetNotExist"
+    filePathArr = funcSample01(sheetName)
     '戻り値がNullであるためメッセージ表示
-    If IsNull(filePathArr) Then MsgBox "ファイルパス配列の取得に失敗しました（処理は続行します）。"
+    If IsNull(filePathArr) Then MsgBox sheetName & "シートは存在しません。" & vbNewLine & "ファイルパス配列の取得に失敗しました（処理は続行します）。"
     
     'funcSample01の呼び出し　存在するシート名の引数で呼び出す
-    filePathArr = funcSample01("FilePath")
+    sheetName = "FilePath"
+    filePathArr = funcSample01(sheetName)
     '戻り値がNullではないため失敗の表示なし
-    If IsNull(filePathArr) Then MsgBox "ファイルパス配列の取得に失敗しました（処理は続行します）。"
+    If IsNull(filePathArr) Then MsgBox sheetName & "シートは存在しません。" & vbNewLine & "ファイルパス配列の取得に失敗しました（処理は続行します）。"
     
     'それぞれのエクセルファイルについて、funcSample02を呼び出す
     For Each filePath In filePathArr
         'funcSample02の呼び出し
-        'すでにA1セルが書き込まれていた場合はイミディエイトウィンドウに失敗したファイルパスを出力
+        'すでにA1セルが書き込まれていた場合は、イミディエイトウィンドウに失敗したファイルパスを出力
         If Not funcSample02(ThisWorkbook.Path & filePath) Then
             Debug.Print "書き込み失敗ファイル：" & filePath
         End If
@@ -51,7 +54,7 @@ Public Sub subSample()
     
     
     '■■■funcSample01,funcSample02などでキャッチできなかった想定外のエラーは
-    '　　　このプロシージャのErrorHandlerでキャッチされます。
+    '　　　このプロシージャのErrorHandler行ラベルでキャッチされます。
     
 ExitHandler:
     
