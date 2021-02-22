@@ -1,0 +1,1 @@
+powershell -command  "cp *.accdb \"C:\Users\dede2\OneDrive\デスクトップ\コピー先.accdb\""
