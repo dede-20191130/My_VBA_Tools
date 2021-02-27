@@ -1,0 +1,222 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*登録・編集Form
+'**************************
+
+'定数
+
+'変数
+Private previousScreenName As String
+Private objRegiOrEdirForm As clsAbsRegiOrEditForm
+Private myCurrentID As Long
+
+
+
+'******************************************************************************************
+'*getter/setter
+'******************************************************************************************
+Public Property Get currentID() As Long
+    currentID = myCurrentID
+End Property
+Public Property Get gPreviousScreenName() As String
+    gPreviousScreenName = previousScreenName
+End Property
+
+
+
+'******************************************************************************************
+'*関数名    ：Form_Open
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Open(Cancel As Integer)
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Open"
+    
+    '変数
+    Dim arrArgs As Variant
+    Dim i As Long
+    
+    On Error GoTo ErrorHandler
+
+    'Argsを取得
+    arrArgs = Split(Nz(Me.OpenArgs, ""), ";")
+    For i = LBound(arrArgs) To UBound(arrArgs)
+        Select Case i
+        Case LBound(arrArgs)
+            previousScreenName = arrArgs(i)
+        Case LBound(arrArgs) + 1
+            Set objRegiOrEdirForm = geneObjRegiOrEdirForm(CLng(arrArgs(i)))
+        Case Else
+            Exit For
+        End Select
+    Next i
+    
+    'Argsの不正検知
+    If previousScreenName = "" Or objRegiOrEdirForm Is Nothing Then
+        #If Not CBool(DEBUG_MODE) Then
+            MsgBox "引数が不正です。" & _
+                   vbNewLine & _
+                   "画面を開けませんでした。", _
+                   vbCritical, TOOL_NAME
+            Cancel = True
+            GoTo ExitHandler
+        #Else
+            If gObjDB Is Nothing Then Call initializeTool
+            previousScreenName = FormName_03
+            Set objRegiOrEdirForm = New clsRegiOrEdirFormCompanyRegi
+        #End If
+    End If
+    
+ExitHandler:
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    Dim dicInfo As Object
+    
+    On Error GoTo ErrorHandler
+
+    Set dicInfo = CreateObject(SCRIPTING_DICTIONARY)
+    
+    'フォームの情報取得
+    If Not objRegiOrEdirForm.getInfo(dicInfo) Then GoTo ExitHandler
+    
+    '取得情報をフォームに設定
+    Me.Caption = dicInfo("formTitle")
+    Me.subF_cutForm.SourceObject = dicInfo("subFormSourceObject")
+    Me.lbl_announce.Caption = dicInfo("announceLblText")
+    Me.btn_execute.Caption = dicInfo("executeBtnTitle")
+    
+    '設定フォームのカレントレコードの値取得・設定
+    If Not objRegiOrEdirForm.getPreviousFormData(myCurrentID) Then GoTo ExitHandler
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_execute_Click
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub btn_execute_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_execute_Click"
+    
+    '変数
+    Dim Cancel As Boolean
+    
+    On Error GoTo ErrorHandler
+    
+    '実行関数呼出
+    If Not objRegiOrEdirForm.btnExecuteClick(Cancel) Then GoTo ExitHandler
+    If Cancel Then GoTo ExitHandler
+    
+    'レコード更新
+    Form_F03_設定.subF_Datasheet.Form.Requery
+    
+    '画面遷移
+    Forms(previousScreenName).Visible = True
+    DoCmd.Close acForm, Me.Name, acSaveNo
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*関数名    ：btn_back_Click
+'*機能      ：
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_back_Click()
+    
+    '定数
+    Const FUNC_NAME As String = "btn_back_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '画面遷移
+    Forms(previousScreenName).Visible = True
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+

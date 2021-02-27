@@ -1,0 +1,298 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*見積書_表作成Form
+'**************************
+
+'定数欄
+Private Const SOURCE_NAME As String = "F08_見積書_表作成"
+
+'変数欄
+Private previousScreenName As String
+Private objF08 As New clsF08
+
+
+'******************************************************************************************
+'*getter/setter欄
+'******************************************************************************************
+Public Property Get gF08ObjF08() As clsF08
+    Set gF08ObjF08 = objF08
+End Property
+
+
+
+
+
+
+'******************************************************************************************
+'*関数名    ：Form_Open
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Open(Cancel As Integer)
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Open"
+    
+    '変数
+    Dim arrArgs As Variant
+    Dim i As Long
+    
+    On Error GoTo ErrorHandler
+
+    'Argsを取得
+    arrArgs = Split(Nz(Me.OpenArgs, ""), ";")
+    For i = LBound(arrArgs) To UBound(arrArgs)
+        Select Case i
+        Case LBound(arrArgs)
+            previousScreenName = arrArgs(i)
+        Case Else
+            Exit For
+        End Select
+    Next i
+    
+    'Argsの不正検知
+    If previousScreenName = "" Then
+        #If Not CBool(DEBUG_MODE) Then
+            MsgBox "引数が不正です。" & _
+                   vbNewLine & _
+                   "画面を開けませんでした。", _
+                   vbCritical, TOOL_NAME
+            Cancel = True
+            GoTo ExitHandler
+        #Else
+            If gObjDB Is Nothing Then Call initializeTool
+            previousScreenName = FormName_07
+            Dim o
+            Set o = New clsF05DtTrsfr
+            o.estiNum = "dummy0000"
+            Call gObjDtTrsfrManager.setObjDtTrsfr(o)
+        #End If
+    End If
+    
+ExitHandler:
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    If Not objF08.formLoad(Me.Form) Then GoTo ExitHandler
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*機能      ：btn_addRcd_Click
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_addRcd_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_addRcd_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    If Not objF08.btnAddRcdClick(Me.Form, gObjDB.Database) Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*機能      ：btn_deleteRcd_Click
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_deleteRcd_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_deleteRcd_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    If Not objF08.btnDeleteRcdClick(Me.Form, gObjDB.Database) Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*機能      ：btn_createFile_Click
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_createFile_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_createFile_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    If Not objF08.btnCreateFileClick(Me.Form, gObjDB.Database) Then GoTo ExitHandler
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*機能      ：btn_backPrev_Click
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_backPrev_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_backPrev_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    If Not objF08.btnBackPrevClick(Me.Form, previousScreenName) Then GoTo ExitHandler
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*機能      ：btn_backMenu_Click
+'*引数      ：
+'******************************************************************************************
+Private Sub btn_backMenu_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_backMenu_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    If Not objF08.btnBackMenuClick(Me.Form, gObjDB.Database) Then GoTo ExitHandler
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub

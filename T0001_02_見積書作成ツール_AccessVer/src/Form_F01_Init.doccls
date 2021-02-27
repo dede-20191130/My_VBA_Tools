@@ -1,0 +1,53 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*初期表示Form
+'**************************
+
+'定数
+
+'変数
+
+
+'******************************************************************************************
+'*関数名    ：Form_Load
+'*機能      ：
+'*引数(1)   ：
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    'ツールの初期化処理
+    If Not initializeTool Then GoTo ExitHandler
+    
+    'メニューフォームを開く
+    DoCmd.OpenForm FormName_02, acNormal
+    
+    '自フォームを閉じる
+    DoCmd.Close acForm, Me.Name, acSaveNo
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "エラー番号：" & err.Number & vbNewLine & _
+           err.description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
