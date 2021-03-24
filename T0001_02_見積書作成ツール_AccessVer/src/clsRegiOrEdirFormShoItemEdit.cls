@@ -48,11 +48,11 @@ Private Function clsAbsRegiOrEditForm_getInfo(pDicInfo As Object) As Boolean
     clsAbsRegiOrEditForm_getInfo = False
     
     'タイトル
-    pDicInfo.Add "formTitle", "取引先会社編集"
+    pDicInfo.Add "formTitle", "商品データ編集"
     'サブフォーム
     pDicInfo.Add "subFormSourceObject", FormName_04_SUB05
     '説明ラベルテキスト
-    pDicInfo.Add "announceLblText", "指定した取引先会社の情報を編集してください。"
+    pDicInfo.Add "announceLblText", "指定した商品データを編集してください。"
     '実行ボタンタイトル
     pDicInfo.Add "executeBtnTitle", EDIT
 
