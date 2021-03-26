@@ -1,4 +1,5 @@
 *laccdb
 *.bat
 *.lnk
+.gitignore
 *~$*
