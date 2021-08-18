@@ -1,0 +1,240 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*商品管理フォーム
+'**************************
+
+'定数欄
+Private Const SOURCE_NAME As String = "商品管理フォーム"
+
+
+
+'変数欄
+
+
+
+'******************************************************************************************
+'*getter/setter欄
+'******************************************************************************************
+
+
+
+
+
+'******************************************************************************************
+'*機能      ：フォームロード時
+'*引数      ：
+'******************************************************************************************
+Private Sub Form_Load()
+
+    '定数
+    Const FUNC_NAME As String = "Form_Load"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    '//コントロールの初期状態
+    '////可視性
+    Me.lbl_product.Visible = True
+    Me.cmb_product.Visible = True
+    Me.lbl_onEdit.Visible = False
+    '////ロック
+    Me.txt_productName.Locked = True
+    Me.txt_productCode.Locked = True
+    Me.txt_nouhinDay.Locked = True
+    '////ラベル
+    Me.btn_edit.Caption = "編集モード開始"
+    
+    
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "cut-sheet-requery-refresh"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*機能      ：フォーム上でのエラーハンドリング
+'*引数      ：
+'******************************************************************************************
+Private Sub Form_Error(DataErr As Integer, Response As Integer)
+
+    '定数
+    Const FUNC_NAME As String = "Form_Error"
+    Const ERR_MUST_INPUT = 3314
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '//既存のエラーメッセージ非表示
+    Response = acDataErrContinue
+    
+    Select Case DataErr
+    '//入力必須項目
+    Case ERR_MUST_INPUT
+        MsgBox ActiveControl.Controls(0).Caption & "は必ず入力してください。", vbExclamation, "警告"
+    '//その他
+    Case Else
+        '//既存のエラーメッセージ
+        Response = acDataErrDisplay
+    End Select
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "cut-sheet-requery-refresh"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*機能      ：コンボボックス更新後
+'*引数      ：
+'******************************************************************************************
+Private Sub cmb_product_AfterUpdate()
+
+    '定数
+    Const FUNC_NAME As String = "cmb_product_AfterUpdate"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    With Me.Recordset
+        '//選択した項目のIDに一致するレコードを表示する
+        .FindFirst "[ID] = " & Nz(Me.cmb_product.Value, 1)
+        If .NoMatch Then
+            If Not (.EOF Or .BOF) Then .MoveFirst
+        End If
+    End With
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "cut-sheet-requery-refresh"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'*機能      ：編集モード開始ボタン押下
+'*引数      ：
+'*戻り値    ：True > 正常終了、False > 異常終了
+'******************************************************************************************
+Private Sub btn_edit_Click()
+
+    '定数
+    Const FUNC_NAME As String = "btn_edit_Click"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+
+    '//編集モード開始
+    If Me.txt_productName.Locked Then
+        '//可視性
+        Me.lbl_product.Visible = False
+        Me.cmb_product.Visible = False
+        Me.lbl_onEdit.Visible = True
+        '//ロック
+        Me.txt_productName.Locked = False
+        Me.txt_productCode.Locked = False
+        Me.txt_nouhinDay.Locked = False
+        '//ラベル
+        Me.btn_edit.Caption = "編集完了"
+    '//編集完了
+    Else
+        '//可視性
+        Me.lbl_product.Visible = True
+        Me.cmb_product.Visible = True
+        Me.lbl_onEdit.Visible = False
+        '//ロック
+        Me.txt_productName.Locked = True
+        Me.txt_productCode.Locked = True
+        Me.txt_nouhinDay.Locked = True
+        '//ラベル
+        Me.btn_edit.Caption = "編集モード開始"
+        
+        '****************************************************
+        '//編集完了後の挙動フレームの選択値によって処理を分岐
+        Select Case Nz(Me.frm_finishEdition.Value, 1)
+        '////フォームに対してRequery実行
+        Case 2
+            Me.Requery
+        '////フォームに対してRefresh実行
+        Case 3
+            Me.Refresh
+        '////商品名選択コンボボックスに対してRequery実行
+        Case 4
+            Me.cmb_product.Requery
+        End Select
+        '****************************************************
+        
+    End If
+
+
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "cut-sheet-requery-refresh"
+        
+    GoTo ExitHandler
+        
+End Sub
