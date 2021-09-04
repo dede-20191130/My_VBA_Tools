@@ -1,0 +1,101 @@
+﻿Option Compare Database
+Option Explicit
+
+
+Private Const SOURCE_NAME = "Main"
+
+
+
+
+'******************************************************************************************
+'*機能      ：フレーム_食べ物または飲み物　更新後イベント
+'*引数      ：
+'******************************************************************************************
+Private Sub フレーム_食べ物または飲み物_AfterUpdate()
+
+
+    '定数
+    Const FUNC_NAME As String = "フレーム_食べ物または飲み物_AfterUpdate"
+    
+    '変数
+    
+    On Error GoTo ErrorHandler
+    
+    '//選択欄クリア
+    コンボ_飲食種類.Value = ""
+    
+    '//関数呼び出し
+    Call changeCmbBoxItems(フレーム_食べ物または飲み物.Value, コンボ_飲食種類)
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+
+'******************************************************************************************
+'*機能      ：フレーム_年齢区分　更新後イベント
+'*引数      ：
+'******************************************************************************************
+Private Sub フレーム_年齢区分_AfterUpdate()
+
+    '定数
+    Const FUNC_NAME As String = "フレーム_年齢区分_AfterUpdate"
+    
+    '変数
+    Dim textboxes(0 To 3) As textbox
+    
+    On Error GoTo ErrorHandler
+    
+    '//設定するテキストボックスをすべて配列に格納
+    Set textboxes(0) = テキスト_小学校
+    Set textboxes(1) = テキスト_中学校
+    Set textboxes(2) = テキスト_酒
+    Set textboxes(3) = テキスト_職業
+    
+    '//関数呼び出し
+    Call changeTextBoxesEnabled(フレーム_年齢区分.Value, textboxes)
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "エラーが発生したため、マクロを終了します。" & _
+           vbLf & _
+           "関数名：" & FUNC_NAME & _
+           vbLf & _
+           "クラス名：" & SOURCE_NAME & _
+           vbLf & _
+           "エラー番号：" & Err.Number & vbNewLine & _
+           Err.Description, vbCritical
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+
+
