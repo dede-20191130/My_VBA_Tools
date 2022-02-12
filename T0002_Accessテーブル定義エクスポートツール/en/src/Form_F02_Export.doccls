@@ -1,0 +1,175 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*Export Form
+'**************************
+
+'Const
+
+'Variable
+
+
+'******************************************************************************************
+'*Function    :Form_Load
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    'Const
+    Const FUNC_NAME As String = "Form_Load"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'initializing
+    Me.txt_filePath.Value = ""
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*Function    :btn_ref_Click
+'******************************************************************************************
+Private Sub btn_ref_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_ref_Click"
+    
+    'Variable
+    Dim dicFilter As Object
+    Dim filePath As String
+    
+    On Error GoTo ErrorHandler
+    
+    'show file picker dialog
+    Set dicFilter = CreateObject("scripting.dictionary")
+    dicFilter.Add "All Access Files", "*.accdb;*.mdb"
+    dicFilter.Add "Access (~2003)", "*.mdb"
+    dicFilter.Add "Access (2007~)", "*.accdb"
+    filePath = getFilePathFromDialog("Pick Target File", dicFilter)
+    If filePath = "" Then GoTo ExitHandler
+    
+    'write the path to textbox
+    Me.txt_filePath.Value = filePath
+
+ExitHandler:
+
+    Set dicFilter = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*Function    :btn_export_Click
+'******************************************************************************************
+Private Sub btn_export_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_export_Click"
+    
+    'Variable
+    Dim isFileNotExist  As Boolean
+    
+    On Error GoTo ErrorHandler
+
+    'confirm whether to continue processing
+    If MsgBox("Table Definition Information of Specified File will be exported.", vbYesNo, Tool_Name) <> vbYes Then GoTo ExitHandler
+
+    'check if the file exists
+    isFileNotExist = (Nz(Me.txt_filePath, "") = "") Or (Dir(Nz(Me.txt_filePath, "")) = "")
+    If isFileNotExist Then MsgBox "File not exists.", vbExclamation, Tool_Name: GoTo ExitHandler
+    
+    'export
+    If Not exportTableDefTablesMain(Me.txt_filePath) Then GoTo ExitHandler
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+'******************************************************************************************
+'*Function    :btn_terminate_Click
+'******************************************************************************************
+Private Sub btn_terminate_Click()
+
+    
+    'Const
+    Const FUNC_NAME As String = "btn_terminate_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'Make sure the user exits the tool
+    If MsgBox("Exit the tool.", vbYesNo, Tool_Name) <> vbYes Then GoTo ExitHandler
+    
+    #If CBool(DEBUG_MODE) Then
+        DoCmd.Close acForm, Me.Name, acSaveNo
+    #Else
+        Application.Quit
+    #End If
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub

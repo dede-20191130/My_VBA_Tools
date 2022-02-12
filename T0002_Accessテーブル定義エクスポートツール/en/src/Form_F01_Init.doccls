@@ -1,0 +1,45 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*Initial Form
+'**************************
+
+
+'******************************************************************************************
+'*Function    :Form_Load
+'*Arg(1)      :
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    'Const
+    Const FUNC_NAME As String = "Form_Load"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'open Export Form
+    DoCmd.OpenForm Form_F02_Export.Name, acNormal
+    
+    'close itself
+    DoCmd.Close acForm, Me.Name, acSaveNo
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
