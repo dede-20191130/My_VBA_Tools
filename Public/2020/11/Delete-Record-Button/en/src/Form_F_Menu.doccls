@@ -1,0 +1,80 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*Menu Form
+'**************************
+
+
+
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_MainScreen_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_MainScreen_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'close itself
+    DoCmd.Close acForm, Me.Name, acSaveNo
+
+    'opne main
+    DoCmd.OpenForm "F_Main"
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_terminate_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_terminate_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'close itself
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub

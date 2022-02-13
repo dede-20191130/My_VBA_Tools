@@ -1,0 +1,139 @@
+﻿Option Compare Database
+Option Explicit
+
+
+
+'**************************
+'*Main Form
+'**************************
+
+
+
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_InsertDummy_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_InsertDummy_Click"
+    
+    'Variable
+    Dim rndStr As String
+    Dim rs As DAO.Recordset
+    
+    On Error GoTo ErrorHandler
+    
+    'get dummy string
+    rndStr = createDummyString
+    If rndStr = "" Then GoTo ExitHandler
+    
+    'insert the string
+    Set rs = CurrentDb.OpenRecordset("T_Main")
+    With rs
+        .AddNew
+        
+        .Fields("RANDOM_TEXT").Value = rndStr
+        
+        .Update
+    End With
+    
+    Me.Recalc
+    
+ExitHandler:
+    
+    If Not rs Is Nothing Then rs.Clone: Set rs = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_Delete_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_Delete_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    
+    'delete
+    With Me.subForm.Form.Recordset
+        .Bookmark = Me!subForm.Form.Bookmark
+        .Delete
+
+    End With
+
+    Me.Recalc
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    If Err.Number = 3021 Then Err.Clear: GoTo ExitHandler
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_back_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_back_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    
+    'close itself
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+    'open menu
+    DoCmd.OpenForm "F_Menu"
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
