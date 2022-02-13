@@ -16,9 +16,9 @@ Public targetTxtBox As Access.TextBox
 
 
 '******************************************************************************************
-'*Function Fwrite the event log into the textbox specified in a module variable
-'*Arg(1)   Fthe written string
-'*Return   FTrue > normal termination; False > abnormal termination
+'*Function :write the event log into the textbox specified in a module variable
+'*Arg(1)   :the written string
+'*Return   :True > normal termination; False > abnormal termination
 
 '******************************************************************************************
 Public Function writeEventLogs(ByVal logTxt As String) As Boolean

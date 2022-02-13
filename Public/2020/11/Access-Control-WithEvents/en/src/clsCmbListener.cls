@@ -34,9 +34,9 @@ End Property
 
 
 '******************************************************************************************
-'*Function ÅFdisable keyboard input
-'*Arg(1)   ÅFkey code
-'*Arg(2)   ÅFshft key pressed or not
+'*Function :disable keyboard input
+'*Arg(1)   :key code
+'*Arg(2)   :shft key pressed or not
 '******************************************************************************************
 Private Sub myComboBox_KeyDown(KeyCode As Integer, Shift As Integer)
     
