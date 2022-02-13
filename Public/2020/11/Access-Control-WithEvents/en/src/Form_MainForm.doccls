@@ -1,0 +1,212 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*MainForm
+'**************************
+
+'Const
+
+
+'Variable
+Private objCmbListener As clsCmbListener
+
+
+
+'******************************************************************************************
+'*getter/setter
+'******************************************************************************************
+
+
+
+
+Private Sub Form_Load()
+    
+    'Const
+    Const FUNC_NAME As String = "Form_Load"
+    
+    'Variable
+    Dim dicInfo As Object
+    
+    On Error GoTo ErrorHandler
+
+    'set Event Class
+    Set objCmbListener = New clsCmbListener: Set objCmbListener.ComboBox = Me.cmb_withEventsTest
+    
+    'set Event Log
+    Set M_EventLog.targetTxtBox = Me.txt_EventLog
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+Private Sub cmb_withEventsTest_BeforeUpdate(Cancel As Integer)
+    
+    'Const
+    Const FUNC_NAME As String = "cmb_withEventsTest_BeforeUpdate"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'do logging
+    If Not M_EventLog.writeEventLogs(FUNC_NAME) Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+Private Sub cmb_withEventsTest_AfterUpdate()
+    
+    'Const
+    Const FUNC_NAME As String = "cmb_selectedRcd_AfterUpdate"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    'do logging
+    If Not M_EventLog.writeEventLogs(FUNC_NAME) Then GoTo ExitHandler
+    If Not M_EventLog.writeEventLogs("""" & Me.cmb_withEventsTest.Value & """" & "Selected") Then GoTo ExitHandler
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+Private Sub txt_EventLog_GotFocus()
+    
+    'Const
+    Const FUNC_NAME As String = "txt_EventLog_GotFocus"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    With Me.txt_EventLog
+        If IsNull(.Value) Then GoTo ExitHandler
+        .SelStart = Len(.Value)
+    End With
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+Private Sub btn_logClear_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_logClear_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+
+    'clear the textbox
+    Me.txt_EventLog.Value = ""
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+Private Sub btn_exit_Click()
+    
+    'Const
+    Const FUNC_NAME As String = "btn_exit_Click"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    'close this form
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, "Access-Control-WithEvents"
+        
+    GoTo ExitHandler
+        
+End Sub
