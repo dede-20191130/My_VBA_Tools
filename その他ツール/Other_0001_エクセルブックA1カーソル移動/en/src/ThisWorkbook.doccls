@@ -1,0 +1,42 @@
+﻿Option Explicit
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub Workbook_Open()
+    
+    'Const
+    Const FUNC_NAME As String = "Workbook_Open"
+    
+    'Variable
+    
+    On Error GoTo ErrorHandler
+    
+    #If Not CBool(DEBUG_MODE) Then
+        'hide the book
+        Windows(ThisWorkbook.Name).Visible = False
+        'activate the tool
+        AppActivate Application.Caption
+    #End If
+    
+    'show main form
+    F_Main.Show vbModeless
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
