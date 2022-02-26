@@ -1,0 +1,270 @@
+﻿Option Compare Database
+Option Explicit
+
+'**************************
+'*Main Form
+'**************************
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub Form_Load()
+    
+    'Consts
+    Const FUNC_NAME As String = "Form_Load"
+    
+    'Vars
+    
+    On Error GoTo ErrorHandler
+
+    'set database
+    Set M_Export.db = CurrentDb
+    
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+'******************************************************************************************
+'*Function :execute 1. & 2.
+'******************************************************************************************
+Private Sub btn_execute_num_1_2_Click()
+    
+    'Consts
+    Const FUNC_NAME As String = "btn_execute_num_1_Click"
+    
+    'Vars
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    
+    On Error GoTo ErrorHandler
+    
+    'instantiate Excel book Creation class
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    'get header data of item data table
+    If Not getTableHeader("M_ITEM_DATA", arrHeader) Then GoTo ExitHandler
+    
+    'get item data where its unit price over 10000
+    If Not getTableDataBySQL("SELECT * FROM M_ITEM_DATA WHERE UNIT_PRICE > 10000;", arrData) Then GoTo ExitHandler
+    
+    'post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "Unit Price over 1000", arrHeader, arrData) Then GoTo ExitHandler
+    
+    Call MsgBox("Execution 1. + 2. Completed" & vbNewLine & "You got a new Book in your Desctop.", , TOOL_NAME)
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*Function :execute 1. & 2. & 3.
+'******************************************************************************************
+Private Sub btn_execute_num_1_2_3_Click()
+    
+    ''Consts
+    Const FUNC_NAME As String = "btn_execute_num_2_Click"
+    
+    'Vars
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    
+    On Error GoTo ErrorHandler
+    
+    'instantiate Excel book Creation class
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    'first sheet
+    '//get header data of item data table
+    If Not getTableHeader("M_ITEM_DATA", arrHeader) Then GoTo ExitHandler
+    
+    '//get item data where its unit price over 10000
+    If Not getTableDataBySQL("SELECT * FROM M_ITEM_DATA WHERE UNIT_PRICE > 10000;", arrData) Then GoTo ExitHandler
+    
+    '//post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "Unit Price over 1000", arrHeader, arrData) Then GoTo ExitHandler
+    
+    'second sheet
+    objCreateNewExcel.addNewSheet
+    
+    '//get item data where its code starts with 'B'
+    If Not getTableDataBySQL("SELECT * FROM M_ITEM_DATA WHERE Left(ITEM_CODE,1) = 'B';", arrData) Then GoTo ExitHandler
+    
+    '//post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(2), "Item Code Starts With B", arrHeader, arrData) Then GoTo ExitHandler
+    
+    Call MsgBox("Execution 1. + 2. + 3. Completed" & vbNewLine & "You got a new Book in your Desctop.", , TOOL_NAME)
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+'******************************************************************************************
+'*Function :execute 1. & 2. & 3. & 4.
+'******************************************************************************************
+Private Sub btn_execute_num_1_2_3_4_Click()
+    
+    ''Consts
+    Const FUNC_NAME As String = "btn_execute_num_3_Click"
+    
+    'Vars
+    Dim objCreateNewExcel As clsCreateNewExcel
+    Dim arrHeader() As String
+    Dim arrData() As Variant
+    Dim dicJson As Dictionary
+    Dim arrJson() As Variant
+    Dim i As Long
+    
+    On Error GoTo ErrorHandler
+    
+    'instantiate Excel book Creation class
+    Set objCreateNewExcel = New clsCreateNewExcel
+    
+    'first sheet
+    '//get header data of item data table
+    If Not getTableHeader("M_ITEM_DATA", arrHeader) Then GoTo ExitHandler
+    
+    '//get item data where its unit price over 10000
+    If Not getTableDataBySQL("SELECT * FROM M_ITEM_DATA WHERE UNIT_PRICE > 10000;", arrData) Then GoTo ExitHandler
+    
+    '//post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(1), "Unit Price over 1000", arrHeader, arrData) Then GoTo ExitHandler
+    
+    'second sheet
+    objCreateNewExcel.addNewSheet
+    
+    '//get item data where its code starts with 'B'
+    If Not getTableDataBySQL("SELECT * FROM M_ITEM_DATA WHERE Left(ITEM_CODE,1) = 'B';", arrData) Then GoTo ExitHandler
+    
+    '//post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(2), "Item Code Starts With B", arrHeader, arrData) Then GoTo ExitHandler
+    
+    'third sheet
+    objCreateNewExcel.addNewSheet
+    
+    'get json string and parse to dictionary object
+    Set dicJson = JsonConverter.ParseJson( _
+        getJsonFromAPI(WEBAPI_URL) _
+    )
+    
+    'store above dincitonary data as a 2-dimentional array
+    ReDim arrJson(0 To dicJson.Count - 1, 0 To 2)
+    For i = LBound(dicJson.Keys) To UBound(dicJson.Keys)
+        arrJson(i, 0) = dicJson.Keys(i)
+        arrJson(i, 1) = dicJson.Item(arrJson(i, 0)).Item("name")
+        arrJson(i, 2) = dicJson.Item(arrJson(i, 0)).Item("price")
+    Next
+    
+    '//post above data to sheet in new book
+    If Not postDataToSheet(objCreateNewExcel.WorkSheets(3), "Data From WebAPI", Array("Item Code", "Item Name", "Price"), arrJson) Then GoTo ExitHandler
+    
+    Call MsgBox("Execution 1. + 2. + 3. + 4. Completed" & vbNewLine & "You got a new Book in your Desctop.", , TOOL_NAME)
+    
+    
+ExitHandler:
+    
+    Set objCreateNewExcel = Nothing
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
+
+
+
+'******************************************************************************************
+'******************************************************************************************
+Private Sub btn_back_Click()
+    
+    'Consts
+    Const FUNC_NAME As String = "btn_back_Click"
+    
+    'Vars
+    
+    On Error GoTo ErrorHandler
+
+    'close me
+    DoCmd.Close acForm, Me.Name, acSaveNo
+    
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, TOOL_NAME
+        
+    GoTo ExitHandler
+        
+End Sub
+
+
