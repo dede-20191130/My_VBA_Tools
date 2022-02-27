@@ -1,0 +1,35 @@
+﻿Option Explicit
+
+
+'******************************************************************************************
+'*Function :
+'*Arg(1)   :
+'******************************************************************************************
+Private Sub btn_showForm_Click()
+    
+    'Consts
+    Const FUNC_NAME As String = "btn_showForm_Click"
+    
+    'Vars
+    
+    On Error GoTo ErrorHandler
+    
+    'show F_Main
+    F_Main.Show vbModeless
+
+ExitHandler:
+
+    Exit Sub
+    
+ErrorHandler:
+
+    MsgBox "An error has occurred and the macro will be terminated." & _
+           vbLf & _
+           "Func Name:" & FUNC_NAME & _
+           vbLf & _
+           "Error No." & Err.Number & vbNewLine & _
+           Err.Description, vbCritical, Tool_Name
+        
+    GoTo ExitHandler
+        
+End Sub
