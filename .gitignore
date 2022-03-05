@@ -3,3 +3,4 @@
 *.lnk
 .gitignore
 *~$*
+.vscode/
